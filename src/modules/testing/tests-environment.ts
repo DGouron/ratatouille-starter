@@ -1,5 +1,5 @@
-import { AppState, createStore } from "@ratatouille/modules/store/store";
-import { Dependencies } from "@ratatouille/modules/store/dependencies";
+import { type AppState, createStore } from "@ratatouille/modules/store/store";
+import type { Dependencies } from "@ratatouille/modules/store/dependencies";
 
 /**
  * Create testing dependencies with provided defaults
@@ -7,9 +7,9 @@ import { Dependencies } from "@ratatouille/modules/store/dependencies";
  * @returns
  */
 const createDependencies = (
-  dependencies?: Partial<Dependencies>
+	dependencies?: Partial<Dependencies>,
 ): Dependencies => ({
-  ...dependencies,
+	...dependencies,
 });
 
 /**
@@ -18,24 +18,24 @@ const createDependencies = (
  * @returns
  */
 export const createTestStore = (config?: {
-  initialState?: Partial<AppState>;
-  dependencies?: Partial<Dependencies>;
+	initialState?: Partial<AppState>;
+	dependencies?: Partial<Dependencies>;
 }) => {
-  const initialStore = createStore({
-    dependencies: createDependencies(config?.dependencies),
-  });
+	const initialStore = createStore({
+		dependencies: createDependencies(config?.dependencies),
+	});
 
-  const initialState = {
-    ...initialStore.getState(),
-    ...config?.initialState,
-  };
+	const initialState = {
+		...initialStore.getState(),
+		...config?.initialState,
+	};
 
-  const store = createStore({
-    initialState,
-    dependencies: createDependencies(config?.dependencies),
-  });
+	const store = createStore({
+		initialState,
+		dependencies: createDependencies(config?.dependencies),
+	});
 
-  return store;
+	return store;
 };
 
 /**
@@ -44,16 +44,16 @@ export const createTestStore = (config?: {
  * @returns
  */
 export const createTestState = (partialState?: Partial<AppState>) => {
-  const store = createStore({
-    dependencies: createDependencies(),
-  });
+	const store = createStore({
+		dependencies: createDependencies(),
+	});
 
-  const storeInitialState = store.getState();
+	const storeInitialState = store.getState();
 
-  const merged = {
-    ...storeInitialState,
-    ...partialState,
-  };
+	const merged = {
+		...storeInitialState,
+		...partialState,
+	};
 
-  return createTestStore({ initialState: merged }).getState();
+	return createTestStore({ initialState: merged }).getState();
 };

@@ -1,0 +1,51 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.7.0/schema.json",
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"suspicious": {
+				"noExplicitAny": "off",
+				"noArrayIndexKey": "off",
+				"noImplicitAnyLet": "off",
+				"noAssignInExpressions": "off",
+				"noMisleadingCharacterClass": "off",
+				"noConfusingVoidType": "off",
+				"noConsoleLog": "warn"
+			},
+			"correctness": {
+				"useExhaustiveDependencies": "off",
+				"useJsxKeyInIterable": "off",
+				"noUnsafeOptionalChaining": "off",
+				"noChildrenProp": "off",
+				"noUnusedImports": "warn",
+				"noUnusedVariables": "warn"
+			},
+			"complexity": {
+				"noForEach": "off",
+				"noBannedTypes": "off"
+			},
+			"style": {
+				"noNonNullAssertion": "off",
+				"noParameterAssign": "off"
+			},
+			"a11y": {
+				"useKeyWithClickEvents": "off",
+				"noSvgWithoutTitle": "off",
+				"useButtonType": "off"
+			},
+			"security": {
+				"noDangerouslySetInnerHtml": "off"
+			},
+			"performance": {
+				"noDelete": "off",
+				"noAccumulatingSpread": "off"
+			}
+		}
+	},
+	"javascript": {
+		"jsxRuntime": "reactClassic"
+	}
+}
