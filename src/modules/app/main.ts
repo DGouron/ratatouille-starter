@@ -1,3 +1,4 @@
+import { SystemIDProvider } from "@ratatouille/modules/core/system.id-provider";
 import type { Dependencies } from "@ratatouille/modules/store/dependencies";
 import { type AppStore, createStore } from "@ratatouille/modules/store/store";
 
@@ -11,7 +12,9 @@ export class App {
 	}
 
 	setupDependencies(): Dependencies {
-		return {};
+		return {
+			idProvider: new SystemIDProvider(),
+		};
 	}
 }
 
