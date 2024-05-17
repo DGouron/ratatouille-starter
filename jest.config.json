@@ -1,0 +1,9 @@
+{
+  "preset": "ts-jest/presets/js-with-ts",
+  "testEnvironment": "jsdom",
+  "transform": {
+    "^.+\\.tsx?$": "ts-jest"
+  },
+  "setupFilesAfterEnv": ["@testing-library/jest-dom/extend-expect"],
+  "moduleDirectories": ["node_modules"]
+}
