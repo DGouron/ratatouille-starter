@@ -1,5 +1,5 @@
-import { IIDProvider } from "@ratatouille/modules/core/id-provider";
+import type { IIDProvider } from "@ratatouille/modules/core/id-provider";
 
 export type Dependencies = {
-  idProvider: IIDProvider;
+	idProvider: IIDProvider;
 };

@@ -1,5 +1,4 @@
-import { app } from "@ratatouille/modules/app/main";
-import { Dependencies } from "@ratatouille/modules/store/dependencies";
+import type { Dependencies } from "@ratatouille/modules/store/dependencies";
 import { createContext, useContext } from "react";
 
 const DependenciesContext = createContext<Dependencies>(null as any);

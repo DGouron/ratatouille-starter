@@ -1,6 +1,5 @@
-import { nanoid } from "@reduxjs/toolkit";
-import { OrderingDomainModel } from "@ratatouille/modules/order/core/model/ordering.domain-model";
-import { IIDProvider } from "@ratatouille/modules/core/id-provider";
+import type { IIDProvider } from "@ratatouille/modules/core/id-provider";
+import type { OrderingDomainModel } from "@ratatouille/modules/order/core/model/ordering.domain-model";
 
 export class GuestForm {
 	constructor(private idProvider: IIDProvider) {}
@@ -13,6 +12,9 @@ export class GuestForm {
 				lastName: "Doe",
 				age: 0,
 			},
-		]
+		];
+	}
+	removeGuest(state: OrderingDomainModel.Guest[], id: string) {
+		return state.filter((guest) => guest.id !== id);
 	}
 }
