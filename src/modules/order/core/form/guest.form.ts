@@ -19,6 +19,32 @@ export class GuestForm {
 		};
 	}
 	removeGuest(state: OrderingDomainModel.Form, id: string) {
-		return { ...state, guest: state.guests.filter((guest) => guest.id !== id) };
+		return {
+			...state,
+			guest: state.guests.filter((guest) => guest.id !== id),
+		};
+	}
+
+	changeOrganizer(state: OrderingDomainModel.Form, id: string) {
+		return {
+			...state,
+			organizerId: state.guests.some((guest) => guest.id === id) ? id : null,
+		};
+	}
+	isSubmittable(state: OrderingDomainModel.Form) {
+		return state.organizerId !== null;
+	}
+	updateGuest<T extends keyof OrderingDomainModel.Guest>(
+		state: OrderingDomainModel.Form,
+		id: string,
+		key: T,
+		value: OrderingDomainModel.Guest[T],
+	) {
+		return {
+			...state,
+			guests: state.guests.map((guest) =>
+				guest.id === id ? { ...guest, [key]: value } : guest,
+			),
+		};
 	}
 }
