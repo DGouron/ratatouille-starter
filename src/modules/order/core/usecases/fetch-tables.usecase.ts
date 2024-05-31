@@ -1,4 +1,5 @@
 import { orderingSlice } from "@ratatouille/modules/order/core/store/ordering.slice";
+import { extractError } from "@ratatouille/modules/shared/erros.utils";
 import type { Dependencies } from "@ratatouille/modules/store/dependencies";
 import type {
 	AppDispatch,
@@ -7,7 +8,7 @@ import type {
 
 export const fetchTables = async (
 	dispatch: AppDispatch,
-	getState: AppGetState,
+	_: AppGetState,
 	dependencies: Dependencies,
 ) => {
 	dispatch(orderingSlice.actions.handleTablesLoading());
@@ -15,6 +16,6 @@ export const fetchTables = async (
 		const tables = await dependencies.tableGateway.getTables();
 		dispatch(orderingSlice.actions.storeTables(tables));
 	} catch (e: unknown) {
-		dispatch(orderingSlice.actions.handleTablesError(e as Error));
+		dispatch(orderingSlice.actions.handleTablesError(extractError(e)));
 	}
 };
