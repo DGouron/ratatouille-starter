@@ -8,6 +8,7 @@ import {
 	configureStore,
 	createListenerMiddleware,
 } from "@reduxjs/toolkit";
+import { registerFetcherListeners } from "@ratatouille/modules/order/core/store/fetcher.listener";
 
 const reducers = combineReducers({
 	ordering: orderingReducer,
@@ -29,6 +30,7 @@ export const createStore = (config: {
 		middleware: (getDefaultMiddleware) => {
 			const listener = createListenerMiddleware();
 			registerOrderingStepListener(listener);
+			registerFetcherListeners(listener);
 
 			return getDefaultMiddleware({
 				thunk: {

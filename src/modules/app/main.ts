@@ -1,4 +1,5 @@
 import { SystemIDProvider } from "@ratatouille/modules/core/system.id-provider";
+import { InMemoryTableGateway } from "@ratatouille/modules/order/core/gateway-infra/in-memory.table-gateway";
 import type { Dependencies } from "@ratatouille/modules/store/dependencies";
 import { type AppStore, createStore } from "@ratatouille/modules/store/store";
 
@@ -14,6 +15,7 @@ export class App {
 	setupDependencies(): Dependencies {
 		return {
 			idProvider: new SystemIDProvider(),
+			tableGateway: new InMemoryTableGateway(),
 		};
 	}
 }
