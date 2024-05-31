@@ -1,4 +1,6 @@
 import { TableFactory } from "@ratatouille/modules/order/core/model/table.factory";
+import { FailingTableGateway } from "@ratatouille/modules/order/core/testing/failing.table-gateway";
+import { StubTableGateway } from "@ratatouille/modules/order/core/testing/stub.table-gateway";
 import { fetchTables } from "@ratatouille/modules/order/core/usecases/fetch-tables.usecase";
 import { createTestStore } from "@ratatouille/modules/testing/tests-environment";
 
@@ -11,15 +13,34 @@ describe("Fetch tables", () => {
 		const listOfTables = [table];
 		const store = createTestStore({
 			dependencies: {
-				tableGateway: {
-					getTables: () => Promise.resolve(listOfTables),
-				},
+				tableGateway: new StubTableGateway(listOfTables),
 			},
 		});
-		await store.dispatch(fetchTables);
+		const promise = store.dispatch(fetchTables);
+		expect(store.getState().ordering.availableTables.status).toEqual("loading");
+
+		await promise;
 
 		expect(store.getState().ordering.availableTables.data).toEqual(
 			listOfTables,
+		);
+		expect(store.getState().ordering.availableTables.status).toEqual("success");
+	});
+	it("should handle tables fetching failure", async () => {
+		const store = createTestStore({
+			dependencies: {
+				tableGateway: new FailingTableGateway(),
+			},
+		});
+		const promise = store.dispatch(fetchTables);
+		expect(store.getState().ordering.availableTables.status).toEqual("loading");
+
+		await promise;
+
+		expect(store.getState().ordering.availableTables.data).toEqual([]);
+		expect(store.getState().ordering.availableTables.status).toEqual("error");
+		expect(store.getState().ordering.availableTables.error).toEqual(
+			"Failed to fetch tables",
 		);
 	});
 });
