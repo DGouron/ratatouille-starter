@@ -9,4 +9,11 @@ export namespace OrderingDomainModel {
 		lastName: string;
 		age: number;
 	};
+	export enum Step {
+		GUEST = 0,
+		TABLE = 1,
+		MEALS = 2,
+		SUMMARY = 3,
+		RESERVED = 4,
+	}
 }

@@ -1,38 +1,54 @@
 import type { IIDProvider } from "@ratatouille/modules/core/id-provider";
 import type { OrderingDomainModel } from "@ratatouille/modules/order/core/model/ordering.domain-model";
+import { produce } from "immer";
 
 export class GuestForm {
 	constructor(private idProvider: IIDProvider) {}
 
 	addGuest(state: OrderingDomainModel.Form) {
-		return {
-			...state,
-			guests: [
-				...state.guests,
-				{
-					id: this.idProvider.generate(),
-					firstName: "John",
-					lastName: "Doe",
-					age: 0,
-				},
-			],
-		};
+		return produce(state, (draft) => {
+			draft.guests.push({
+				id: this.idProvider.generate(),
+				firstName: "John",
+				lastName: "Doe",
+				age: 0,
+			});
+		});
 	}
+
 	removeGuest(state: OrderingDomainModel.Form, id: string) {
-		return {
-			...state,
-			guest: state.guests.filter((guest) => guest.id !== id),
-		};
+		return produce(state, (draft) => {
+			const index = draft.guests.findIndex((guest) => guest.id === id);
+			if (index < 0) {
+				return;
+			}
+
+			draft.guests.splice(index, 1);
+
+			if (draft.organizerId === id) {
+				draft.organizerId = null;
+			}
+		});
 	}
 
 	changeOrganizer(state: OrderingDomainModel.Form, id: string) {
-		return {
-			...state,
-			organizerId: state.guests.some((guest) => guest.id === id) ? id : null,
-		};
+		return produce(state, (draft) => {
+			//defensive programming
+			draft.organizerId = draft.guests.some((guest) => guest.id === id)
+				? id
+				: null;
+		});
 	}
 	isSubmittable(state: OrderingDomainModel.Form) {
-		return state.organizerId !== null;
+		return (
+			state.organizerId !== null &&
+			state.guests.every(
+				(guest) =>
+					guest.age > 0 &&
+					guest.firstName.length > 0 &&
+					guest.lastName.length > 0,
+			)
+		);
 	}
 	updateGuest<T extends keyof OrderingDomainModel.Guest>(
 		state: OrderingDomainModel.Form,
@@ -40,11 +56,13 @@ export class GuestForm {
 		key: T,
 		value: OrderingDomainModel.Guest[T],
 	) {
-		return {
-			...state,
-			guests: state.guests.map((guest) =>
-				guest.id === id ? { ...guest, [key]: value } : guest,
-			),
-		};
+		return produce(state, (draft) => {
+			const guest = draft.guests.find((guest) => guest.id === id);
+			if (!guest) {
+				return;
+			}
+
+			guest[key] = value;
+		});
 	}
 }

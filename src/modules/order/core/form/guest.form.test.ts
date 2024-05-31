@@ -1,5 +1,6 @@
 import type { IIDProvider } from "@ratatouille/modules/core/id-provider";
 import { GuestForm } from "@ratatouille/modules/order/core/form/guest.form";
+import { GuestFactory } from "@ratatouille/modules/order/core/model/guest.factory";
 import type { OrderingDomainModel } from "@ratatouille/modules/order/core/model/ordering.domain-model";
 import { describe, expect, it } from "vitest";
 
@@ -9,36 +10,30 @@ class StubIDProvider implements IIDProvider {
 	}
 }
 
+const johnDoe = GuestFactory.create({
+	id: "1",
+	firstName: "John",
+	lastName: "Doe",
+	age: 24,
+});
+
+const janeDoe = GuestFactory.create({
+	id: "2",
+	firstName: "Jane",
+	lastName: "Doe",
+	age: 24,
+});
+
 const EMPTY_INITIAL_STATE: OrderingDomainModel.Form = {
 	guests: [],
 	organizerId: null,
 };
 const STATE_WITH_ONE_GUEST: OrderingDomainModel.Form = {
-	guests: [
-		{
-			id: "1",
-			firstName: "John",
-			lastName: "Doe",
-			age: 0,
-		},
-	],
+	guests: [johnDoe],
 	organizerId: null,
 };
 const STATE_WITH_TWO_GUESTS: OrderingDomainModel.Form = {
-	guests: [
-		{
-			id: "1",
-			firstName: "John",
-			lastName: "Doe",
-			age: 0,
-		},
-		{
-			id: "2",
-			firstName: "John",
-			lastName: "Doe",
-			age: 0,
-		},
-	],
+	guests: [johnDoe, janeDoe],
 	organizerId: null,
 };
 const idProvider = new StubIDProvider();
@@ -68,7 +63,7 @@ describe("Add a guest", () => {
 				id: "1",
 				firstName: "John",
 				lastName: "Doe",
-				age: 0,
+				age: 24,
 			},
 			{
 				id: "1",
@@ -85,13 +80,13 @@ describe("Add a guest", () => {
 				id: "1",
 				firstName: "John",
 				lastName: "Doe",
-				age: 0,
+				age: 24,
 			},
 			{
 				id: "2",
-				firstName: "John",
+				firstName: "Jane",
 				lastName: "Doe",
-				age: 0,
+				age: 24,
 			},
 			{
 				id: "1",
@@ -110,18 +105,26 @@ describe("Removing a guest", () => {
 	});
 	it("when there is a user with ID 1, the user with ID 1 should be removed", () => {
 		const state = form.removeGuest(STATE_WITH_ONE_GUEST, "1");
-		expect(state.guest).toEqual([]);
+		expect(state.guests).toEqual([]);
 	});
 	it("when there's two users, only the user with ID 1 should be removed", () => {
 		const state = form.removeGuest(STATE_WITH_TWO_GUESTS, "1");
-		expect(state.guest).toEqual([
+		expect(state.guests).toEqual([
 			{
 				id: "2",
-				firstName: "John",
+				firstName: "Jane",
 				lastName: "Doe",
-				age: 0,
+				age: 24,
 			},
 		]);
+	});
+	it("when  I remove an organizer, it should set the organizerId to null", () => {
+		const stateWithOrganizer = {
+			...STATE_WITH_ONE_GUEST,
+			organizerId: "1",
+		};
+		const state = form.removeGuest(stateWithOrganizer, "1");
+		expect(state.organizerId).toEqual(null);
 	});
 });
 
@@ -149,6 +152,18 @@ describe("Is Submittable", () => {
 		const isSubmittable = form.isSubmittable(withOrganizerState);
 		expect(isSubmittable).toEqual(true);
 	});
+	it.each([{ age: 0 }, { firstName: "" }, { lastName: "" }])(
+		"when the guest has an invalid %s, it should not be submittable",
+		(invalidField) => {
+			const withOrganizerState = {
+				...STATE_WITH_ONE_GUEST,
+				organizerId: "1",
+				guests: [{ ...johnDoe, ...invalidField }],
+			};
+			const isSubmittable = form.isSubmittable(withOrganizerState);
+			expect(isSubmittable).toEqual(false);
+		},
+	);
 });
 
 describe("Update a guest", () => {
@@ -159,5 +174,15 @@ describe("Update a guest", () => {
 	])("should change the %s of the guest", ({ key, value }) => {
 		const state = form.updateGuest(STATE_WITH_ONE_GUEST, "1", key, value);
 		expect(state.guests[0][key]).toEqual(value);
+	});
+
+	it("should do nothing when the guest does not exist", () => {
+		const state = form.updateGuest(
+			EMPTY_INITIAL_STATE,
+			"1",
+			"firstName",
+			"Jane",
+		);
+		expect(state.guests).toEqual([]);
 	});
 });

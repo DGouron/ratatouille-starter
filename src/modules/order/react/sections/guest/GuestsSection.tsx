@@ -3,7 +3,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Button, Checkbox, FormControl, FormControlLabel, FormLabel, Grid, TextField, Typography } from '@mui/material';
 import type { OrderingDomainModel } from '@ratatouille/modules/order/core/model/ordering.domain-model';
-import { useGuestsSection } from '@ratatouille/modules/order/react/sections/use-guests-section';
+import { useGuestsSection } from '@ratatouille/modules/order/react/sections/guest/use-guests-section';
 import React from 'react'
 
 export const GuestsSection: React.FC<{}> = () => {
