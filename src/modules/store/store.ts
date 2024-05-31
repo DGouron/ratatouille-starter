@@ -29,6 +29,7 @@ export const createStore = (config: {
 		middleware: (getDefaultMiddleware) => {
 			const listener = createListenerMiddleware();
 			registerOrderingStepListener(listener);
+
 			return getDefaultMiddleware({
 				thunk: {
 					extraArgument: config.dependencies,

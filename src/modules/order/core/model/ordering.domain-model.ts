@@ -16,4 +16,10 @@ export namespace OrderingDomainModel {
 		SUMMARY = 3,
 		RESERVED = 4,
 	}
+
+	export type Table = {
+		id: string;
+		title: string;
+		capacity: number;
+	};
 }
