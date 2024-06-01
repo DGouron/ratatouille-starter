@@ -2,6 +2,7 @@ export namespace OrderingDomainModel {
 	export type Form = {
 		guests: Guest[];
 		organizerId: string | null;
+		tableId: string | null;
 	};
 	export type Guest = {
 		id: string;

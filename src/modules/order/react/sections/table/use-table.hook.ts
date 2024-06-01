@@ -1,5 +1,6 @@
 import { OrderingDomainModel } from "@ratatouille/modules/order/core/model/ordering.domain-model";
 import { orderingSlice } from "@ratatouille/modules/order/core/store/ordering.slice";
+import { chooseTable } from "@ratatouille/modules/order/core/usecases/choose-table.usecase";
 import {
 	type AppState,
 	useAppDispatch,
@@ -12,7 +13,7 @@ export const useTable = () => {
 		setAssignedTableId(tableId);
 	}
 	function onNext() {
-		dispatch(orderingSlice.actions.setStep(OrderingDomainModel.Step.MEALS));
+		dispatch(chooseTable(assignedTableId!));
 	}
 	function onPrevious() {
 		dispatch(orderingSlice.actions.setStep(OrderingDomainModel.Step.GUEST));

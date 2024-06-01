@@ -17,6 +17,7 @@ export const initialState: OrderingState = {
 	form: {
 		guests: [],
 		organizerId: null,
+		tableId: null,
 	},
 	availableTables: {
 		status: "idle",
@@ -48,6 +49,9 @@ export const orderingSlice = createSlice({
 		handleTablesError: (state, action: PayloadAction<Error>) => {
 			state.availableTables.status = "error";
 			state.availableTables.error = action.payload.message;
+		},
+		chooseTable: (state, action: PayloadAction<string>) => {
+			state.form.tableId = action.payload;
 		},
 	},
 });

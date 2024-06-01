@@ -7,6 +7,6 @@ import type {
 
 export const chooseGuest =
 	(form: OrderingDomainModel.Form) =>
-	(dispatch: AppDispatch, getState: AppGetState) => {
+	(dispatch: AppDispatch, _getState: AppGetState) => {
 		dispatch(orderingActions.chooseGuests(form));
 	};
