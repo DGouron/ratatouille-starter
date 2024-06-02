@@ -64,17 +64,108 @@ const adult = GuestFactory.create({ id: "1", age: 30 });
 const child = GuestFactory.create({ id: "2", age: 3 });
 describe("Selecting meals", () => {
 	describe("selecting entries", () => {
-		it("when there are no meals available, it should return an empty array", () => {
-			const result = mealForm.getSelectableEntries([], adult);
-			expect(result).toEqual([]);
+		it.each([
+			{
+				meals: [],
+				guest: adult,
+				expected: [],
+			},
+			{
+				meals,
+				guest: adult,
+				expected: [regularEntry, adultEntry],
+			},
+			{
+				meals,
+				guest: child,
+				expected: [regularEntry],
+			},
+			{
+				meals: [adultEntry],
+				guest: child,
+				expected: [],
+			},
+		])("should get selectable entries", ({ meals, guest, expected }) => {
+			const result = mealForm.getSelectableEntries(meals, guest);
+			expect(result).toEqual(expected);
 		});
-		it("when meals are available, it should return adult meals", () => {
-			const result = mealForm.getSelectableEntries(meals, adult);
-			expect(result).toEqual([regularEntry, adultEntry]);
+
+		it.each([
+			{
+				meals: [],
+				guest: adult,
+				expected: [],
+			},
+			{
+				meals,
+				guest: adult,
+				expected: [regularMainCourse, adultMainCourse],
+			},
+			{
+				meals,
+				guest: child,
+				expected: [regularMainCourse],
+			},
+			{
+				meals: [adultMainCourse],
+				guest: child,
+				expected: [],
+			},
+		])("should get selectable main courses", ({ meals, guest, expected }) => {
+			const result = mealForm.getSelectableMainCourses(meals, guest);
+			expect(result).toEqual(expected);
 		});
-		it("when meals are available, it should return children-only meals", () => {
-			const result = mealForm.getSelectableEntries(meals, child);
-			expect(result).toEqual([regularEntry]);
+
+		it.each([
+			{
+				meals: [],
+				guest: adult,
+				expected: [],
+			},
+			{
+				meals,
+				guest: adult,
+				expected: [regularDessert, adultDessert],
+			},
+			{
+				meals,
+				guest: child,
+				expected: [regularDessert],
+			},
+			{
+				meals: [adultDessert],
+				guest: child,
+				expected: [],
+			},
+		])("should get selectable dessert", ({ meals, guest, expected }) => {
+			const result = mealForm.getSelectableDessert(meals, guest);
+			expect(result).toEqual(expected);
+		});
+
+		it.each([
+			{
+				meals: [],
+				guest: adult,
+				expected: [],
+			},
+			{
+				meals,
+				guest: adult,
+				expected: [regularDrink, adultDrink],
+			},
+			{
+				meals,
+				guest: child,
+				expected: [regularDrink],
+			},
+			{
+				meals: [adultDrink],
+				guest: child,
+				expected: [],
+			},
+		])("should get selectable drink", ({ meals, guest, expected }) => {
+			const result = mealForm.getSelectableDrink(meals, guest);
+			expect(result).toEqual(expected);
 		});
 	});
 });
