@@ -8,6 +8,12 @@ export class GuestFactory {
 			firstName: data?.firstName ?? "",
 			lastName: data?.lastName ?? "",
 			age: data?.age ?? 24,
+			meals: {
+				entry: null,
+				mainCourse: null,
+				dessert: null,
+				drink: null,
+			},
 			...data,
 		};
 	}
