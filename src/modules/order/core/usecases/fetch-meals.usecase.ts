@@ -6,16 +6,17 @@ import type {
 	AppGetState,
 } from "@ratatouille/modules/store/store";
 
-export const fetchTables = async (
+export const fetchMeals = async (
 	dispatch: AppDispatch,
 	_: AppGetState,
 	dependencies: Dependencies,
 ) => {
-	dispatch(orderingSlice.actions.handleTablesLoading());
 	try {
-		const tables = await dependencies?.tableGateway?.getTables();
-		if (tables) dispatch(orderingSlice.actions.storeTables(tables));
-	} catch (e: unknown) {
-		dispatch(orderingSlice.actions.handleTablesError(extractError(e)));
+		dispatch(orderingSlice.actions.handleMealsLoading());
+		const meals = await dependencies.mealGateway.getMeals();
+		dispatch(orderingSlice.actions.storeMeals(meals));
+	} catch (error: unknown) {
+		const errorToHandle = extractError(error);
+		dispatch(orderingSlice.actions.handleMealsError(errorToHandle));
 	}
 };

@@ -131,4 +131,10 @@ export class MealForm {
 			guest.meals.drink = mealId;
 		});
 	}
+
+	isSubmittable(form: OrderingDomainModel.Form) {
+		return form.guests.every((guest) => {
+			return guest.meals.mainCourse !== null;
+		});
+	}
 }

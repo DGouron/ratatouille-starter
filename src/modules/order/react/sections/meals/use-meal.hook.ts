@@ -1,34 +1,83 @@
-import type { OrderingDomainModel } from "@ratatouille/modules/order/core/model/ordering.domain-model";
+import { MealForm } from "@ratatouille/modules/order/core/form/meal.form";
+import { OrderingDomainModel } from "@ratatouille/modules/order/core/model/ordering.domain-model";
+import { orderingSlice } from "@ratatouille/modules/order/core/store/ordering.slice";
+import {
+	type AppState,
+	useAppDispatch,
+} from "@ratatouille/modules/store/store";
+import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 export const useMeal = () => {
+	function findGuestById(guestId: string) {
+		return form.guests.find((guest) => guest.id === guestId);
+	}
 	function getSelectableEntries(guestId: string): OrderingDomainModel.Meal[] {
-		return [];
+		const guest = findGuestById(guestId);
+		if (!guest) {
+			return [];
+		}
+		return mealForm.current.getSelectableEntries(meals, guest);
 	}
 	function getSelectableMainCourses(
 		guestId: string,
 	): OrderingDomainModel.Meal[] {
-		return [];
+		const guest = findGuestById(guestId);
+		if (!guest) {
+			return [];
+		}
+		return mealForm.current.getSelectableEntries(meals, guest);
 	}
 	function getSelectableDesserts(guestId: string): OrderingDomainModel.Meal[] {
-		return [];
+		const guest = findGuestById(guestId);
+		if (!guest) {
+			return [];
+		}
+		return mealForm.current.getSelectableEntries(meals, guest);
 	}
 	function getSelectableDrinks(guestId: string): OrderingDomainModel.Meal[] {
-		return [];
+		const guest = findGuestById(guestId);
+		if (!guest) {
+			return [];
+		}
+		return mealForm.current.getSelectableEntries(meals, guest);
 	}
 
-	function assignEntry(guestId: string, mealId: string) {}
-	function assignMainCourse(guestId: string, mealId: string) {}
-	function assignDessert(guestId: string, mealId: string) {}
-	function assignDrink(guestId: string, mealId: string) {}
+	function assignEntry(guestId: string, mealId: string) {
+		const nextState = mealForm.current.assignEntry(form, guestId, mealId);
+		setForm(nextState);
+	}
+	function assignMainCourse(guestId: string, mealId: string) {
+		const nextState = mealForm.current.assignMainCourse(form, guestId, mealId);
+		setForm(nextState);
+	}
+	function assignDessert(guestId: string, mealId: string) {
+		const nextState = mealForm.current.assignDessert(form, guestId, mealId);
+		setForm(nextState);
+	}
+	function assignDrink(guestId: string, mealId: string) {
+		const nextState = mealForm.current.assignDrink(form, guestId, mealId);
+		setForm(nextState);
+	}
 
-	function onNext() {}
-	function onPrevious() {}
+	function onNext() {
+		dispatch(orderingSlice.actions.setStep(OrderingDomainModel.Step.SUMMARY));
+	}
+	function onPrevious() {
+		dispatch(orderingSlice.actions.setStep(OrderingDomainModel.Step.TABLE));
+	}
 
 	function isSubmittable() {
-		return false;
+		return mealForm.current.isSubmittable(form);
 	}
 
-	const guests: OrderingDomainModel.Guest[] = [];
+	const dispatch = useAppDispatch();
+	const meals: OrderingDomainModel.Meal[] = useSelector(
+		(state: AppState) => state.ordering.availableMeals.data,
+	);
+	const initialForm = useSelector((state: AppState) => state.ordering.form);
+	const mealForm = useRef(new MealForm());
+	const [form, setForm] = useState<OrderingDomainModel.Form>(initialForm);
 
 	return {
 		getSelectableEntries,
@@ -42,6 +91,6 @@ export const useMeal = () => {
 		onNext,
 		onPrevious,
 		isSubmittable: isSubmittable(),
-		guests,
+		guests: form.guests,
 	};
 };
